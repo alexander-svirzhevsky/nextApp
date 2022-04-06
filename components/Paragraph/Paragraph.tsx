@@ -13,5 +13,5 @@ export const Paragraph = ({ size = "m", children, className, ...props }: Paragra
         >
             {children}
         </p>
-    )
-}
+    );
+};
