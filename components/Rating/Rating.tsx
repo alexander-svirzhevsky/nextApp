@@ -11,9 +11,6 @@ export const Rating = ({ isEditable = false, rating, setRating, ...props }: Rati
 		constructRating(rating);
 	}, [rating]);
 
-	console.log("test");
-
-
 	const constructRating = (currentRating: number) => {
 
 		const updatedArray = ratingArray.map((el: JSX.Element, i: number) => {
