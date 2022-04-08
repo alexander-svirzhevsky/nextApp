@@ -1,8 +1,11 @@
+import { GetStaticProps } from "next";
 import { useState } from "react";
 import { Button, Htag, Paragraph, Tag, Rating } from "../components";
 import { withLayout } from "../layout/Layout";
+import axios from "axios";
+import { MenuItem } from "../interfaces/menu.interface";
 
-function Home(): JSX.Element {
+function Home({ menu, firstCategory }: HomeProps): JSX.Element {
   const [counter, setCounter] = useState<number>(0);
   const [rating, setRating] = useState<number>(4);
   return (
@@ -20,16 +23,10 @@ function Home(): JSX.Element {
       </Button>
       <Paragraph>Hello world</Paragraph>
       <Paragraph size="l">
-        L Paragraph Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        Dolorum debitis laboriosam sint odit impedit, explicabo distinctio
-        maiores culpa delectus tempore dolorem, quas voluptatibus dolor mollitia
-        veritatis possimus deleniti perspiciatis enim.
+        L Paragraph.
       </Paragraph>
       <Paragraph size="s">
-        S size Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit
-        molestias mollitia nam similique quos! Doloremque, iure non minima
-        voluptatem cumque eveniet saepe quia repellat modi vitae qui laborum
-        enim impedit!{" "}
+        S size{" "}
       </Paragraph>
       <Tag size="s" color="red">
         red
@@ -39,8 +36,31 @@ function Home(): JSX.Element {
       </Tag>
       <Tag color="primary">{counter}</Tag>
       <Rating isEditable={true} rating={rating} setRating={setRating} />
+      <ul>
+        {menu.map(m => (
+          <li key={m._id.secondCategory} >{m._id.secondCategory}</li>
+        ))}
+      </ul>
     </>
   );
 }
 
 export default withLayout(Home);
+
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const firstCategory = 0;
+  const { data: menu } = await axios.post<MenuItem[]>(process.env.NEXT_PUBLIC_DOMAIN + "/api/top-page/find", {
+    firstCategory
+  });
+  return {
+    props: {
+      menu,
+      firstCategory
+    }
+  };
+};
+
+interface HomeProps extends Record<string, unknown> {
+  menu: MenuItem[],
+  firstCategory: number;
+}
